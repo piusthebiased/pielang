@@ -3,6 +3,7 @@
 
 using namespace std;
 
+//part 1, create a laxer
 //lexer basically returns token to standardize stuff ig
 enum Token {
 	tok_eof = -1,				//end of file
@@ -53,7 +54,7 @@ static int gettok() {
 	}
 
 	//handle commenting
-	if (LastChar == '/') {
+	if (LastChar == '#') { // figure out how to do double comment later
 		//comments until the newline char.
 		do LastChar = getchar();
 		while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
@@ -70,13 +71,89 @@ static int gettok() {
 	return ThisChar;
 }
 
-//testcase
-int main() {
-	while(true) {
-		int tok = gettok();
-		cout << "got token: " << tok << endl;
-	}
-}
+//part 2, the abstract syntax tree(ast)
+//so the ast basically models a language (kinda?) idk this is gonna be fun!
+
+//base class for all
+class ExprAST {
+public:
+	virtual ~ExprAST() {} //virtual meaning a subclass can override this implentation
+};
+
+//abstract syntax tree for numeric values
+class NumberExprAST : public ExprAST {
+	double Val;
+
+public:
+	//initializer list, assigns variable to class.  think getters & setters
+	NumberExprAST(double Val)
+		: Val(Val) {}
+};
+
+//syntax tree for variables
+class VariableExprAST : public ExprAST {
+	std::string Name;
+
+public:
+	VariableExprAST(const std::string &Name)
+		: Name(Name) {}
+};
+
+//syntax tree for binary
+class BinaryExprAST : public ExprAST {
+	char Op;
+	std::unique_ptr<ExprAST> LHS, RHS;
+
+public:
+	BinaryExprAST(char op, std::unique_ptr<ExprAST> LHS, std::unique_ptr<ExprAST> RHS)
+		: Op(Op), LHS(std::move(LHS)), RHS(std::move(RHS)) {}
+};
+
+//function calls syntax tree
+class CallExprAST : public ExprAST {
+  std::string Callee;
+  std::vector<std::unique_ptr<ExprAST>> Args;
+
+public:
+  CallExprAST(const std::string &Callee, std::vector<std::unique_ptr<ExprAST>> Args)
+	: Callee(Callee), Args(std::move(Args)) {}
+};
+
+//prototype function syntax tree, captures the name and the arguments
+//basically represents the function, as a prototype.
+class PrototypeAST {
+  std::string Name;
+  std::vector<std::string> Args;
+
+public:
+  PrototypeAST(const std::string &Name, std::vector<std::string> Args)
+	: Name(Name), Args(std::move(Args)) {}
+
+  const std::string &getName() const { return Name; }
+};
+
+//function syntax tree
+//this represents the function itself.
+class FunctionAST {
+  std::unique_ptr<PrototypeAST> Proto;
+  std::unique_ptr<ExprAST> Body;
+
+public:
+  FunctionAST(std::unique_ptr<PrototypeAST> Proto, std::unique_ptr<ExprAST> Body)
+      : Proto(std::move(Proto)), Body(std::move(Body)) {}
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
