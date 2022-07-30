@@ -70,6 +70,7 @@ static int gettok() {
 	return ThisChar;
 }
 
+//testcase
 int main() {
 	while(true) {
 		int tok = gettok();
