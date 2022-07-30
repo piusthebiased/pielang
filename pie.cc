@@ -1,10 +1,17 @@
 #include <string>
 #include <iostream>
+#include <vector>
+#include <memory>
 
 using namespace std;
 
 //part 1, create a laxer
 //lexer basically returns token to standardize stuff ig
+//===----------------------------------------------------------------------===//
+// Lexer
+//===----------------------------------------------------------------------===//
+
+//tokenize enumeration
 enum Token {
 	tok_eof = -1,				//end of file
 	tok_void = -2,				//function
@@ -73,6 +80,11 @@ static int gettok() {
 
 //part 2, the abstract syntax tree(ast)
 //so the ast basically models a language (kinda?) idk this is gonna be fun!
+//===----------------------------------------------------------------------===//
+// Abstract Syntax Tree (aka Parse Tree)
+//===----------------------------------------------------------------------===//
+
+namespace {
 
 //base class for all
 class ExprAST {
@@ -142,6 +154,13 @@ public:
   FunctionAST(std::unique_ptr<PrototypeAST> Proto, std::unique_ptr<ExprAST> Body)
       : Proto(std::move(Proto)), Body(std::move(Body)) {}
 };
+
+} //end anon namespace
+
+//placeholder for compilation
+int main(){
+	cout << "Hello world!" << endl;
+}
 
 
 
